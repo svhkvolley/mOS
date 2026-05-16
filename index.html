@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#292520">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>m-OS Core Stable</title>
+<style>
+:root{--bg:#f5efe4;--card:#fffaf1;--ink:#25221e;--muted:#746b61;--line:#ded2c0;--dark:#292520;--soft:#efe6d8;--ram:#8d5f9f;--queue:#d09a47;--storage:#627b69;--done:#6d8f68;--daemon:#5d8a8a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}.app{width:min(1120px,calc(100% - 24px));margin:auto;padding:12px 0 100px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.brand{font-size:30px;font-weight:950;letter-spacing:-.06em}.badge{background:var(--dark);color:white;border-radius:999px;padding:9px 13px;font-weight:850;border:0}.tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px}.tab{border:1px solid #c8b8a3;background:#efe6d8;color:#3a322b;border-radius:16px;padding:12px;font-weight:900}.tab.active{background:var(--dark);color:white;border-color:var(--dark)}.view{display:none}.view.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:16px;margin-bottom:14px}.row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.modeRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}button{border:0;background:var(--dark);color:white;border-radius:14px;padding:10px 13px;font-weight:850;cursor:pointer}button.secondary,.modeBtn{background:white;color:var(--ink);border:1px solid var(--line)}.modeBtn.active{background:var(--dark);color:white}.sectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}h2{margin:0;font-size:27px;letter-spacing:-.04em}h3,h4{margin:0}.sub{color:var(--muted);font-size:14px}.count{background:var(--soft);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:950}.task{background:white;border:1px solid var(--line);border-left:7px solid var(--queue);border-radius:18px;padding:12px;margin-bottom:10px}.task.ram{border-left-color:var(--ram)}.task.queue{border-left-color:var(--queue)}.task.storage{border-left-color:var(--storage)}.task.daemon{border-left-color:var(--daemon)}.taskRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.task h4{font-size:17px;line-height:1.18;overflow-wrap:anywhere}.taskBtns{display:grid;grid-auto-flow:column;grid-auto-columns:40px;gap:6px}.iconBtn,.doneBtn{width:40px;height:40px;min-width:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:12px}.iconBtn{background:white;color:var(--ink);border:1px solid var(--line);font-size:17px}.doneBtn{background:var(--done);font-size:17px}.dueBadge{display:inline-block;background:var(--soft);border-radius:999px;padding:4px 8px;font-size:12px;font-weight:850;margin-top:6px;color:var(--muted)}.fab{position:fixed;right:20px;bottom:20px;width:64px;height:64px;border-radius:50%;font-size:32px;box-shadow:0 12px 30px rgba(0,0,0,.22);z-index:20}.overlay{position:fixed;inset:0;background:rgba(20,16,12,.52);display:none;align-items:flex-end;justify-content:center;padding:14px;z-index:50}.overlay.show{display:flex}.modal{width:min(680px,100%);max-height:90vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:18px}.modalHead{display:flex;justify-content:space-between;gap:10px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.box{background:white;border:1px solid var(--line);border-radius:14px;padding:10px}.box label{display:block;font-size:12px;font-weight:900;color:var(--muted);margin-bottom:5px}select,input,textarea{width:100%;border:1px solid var(--line);border-radius:13px;background:white;padding:11px;font:inherit}input[type=range]{padding:0;border:0;background:transparent;accent-color:var(--dark)}.rangeRow{display:flex;align-items:center;gap:10px}.rangeRow input{flex:1}.rangeValue{min-width:34px;text-align:center;background:var(--soft);border-radius:999px;padding:5px 8px;font-weight:900;font-size:12px}.hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.25}.optionGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{background:white;color:var(--ink);border:1px solid var(--line);text-align:left;padding:14px;border-radius:16px}.msg{background:var(--soft);border-radius:14px;padding:10px;margin:10px 0;color:var(--muted);font-size:14px}.suggestion{background:white;border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px}.suggestion.accepted{border-left:7px solid var(--done)}.suggestion.ignored{opacity:.55;border-left:7px solid #b96152}.suggestionActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.empty{border:1px dashed var(--line);border-radius:18px;padding:16px;text-align:center;color:var(--muted);background:white}details{margin-top:10px}details summary{cursor:pointer;font-weight:850;color:var(--muted);font-size:14px}.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(80px);opacity:0;background:var(--dark);color:white;border-radius:999px;padding:12px 16px;transition:.25s;z-index:80}.toast.show{transform:translateX(-50%) translateY(0);opacity:1}.areaItem{background:white;border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:8px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.areaBtns{display:flex;gap:6px;flex-wrap:wrap}
+@media(max-width:700px){.tabs{grid-template-columns:repeat(2,1fr)}.grid,.optionGrid,.tools{grid-template-columns:1fr}}
+
+.statGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.statBox{background:white;border:1px solid var(--line);border-radius:18px;padding:12px}
+.statBox strong{display:block;font-size:24px;margin-bottom:4px}
+.barRow{display:grid;grid-template-columns:120px 1fr 40px;gap:8px;align-items:center;margin:8px 0}
+.barTrack{height:12px;background:var(--soft);border-radius:999px;overflow:hidden}
+.barFill{height:100%;background:var(--dark);border-radius:999px}
+.archiveHero{background:white;border:1px solid var(--line);border-radius:20px;padding:14px;margin-bottom:12px}
+.animalBadge{font-size:36px;margin-right:8px}
+.archiveItem{background:white;border:1px solid var(--line);border-left:7px solid var(--done);border-radius:18px;padding:12px;margin-bottom:10px}
+@media(max-width:700px){.statGrid{grid-template-columns:1fr}.barRow{grid-template-columns:90px 1fr 32px}}
+
+
+.areaPriority{display:grid;grid-template-columns:minmax(0,1fr) 160px auto;gap:8px;align-items:center}
+.areaPriority .rangeValue{display:inline-block}
+@media(max-width:700px){.areaPriority{grid-template-columns:1fr}.areaBtns{justify-content:flex-start}}
+
+
+.achievement{background:linear-gradient(135deg,#fff,#f3eadb);border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px}
+.legendary{border-left:7px solid #d09a47}
+.museumCard{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px}
+.stamp{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--soft);font-size:11px;font-weight:900;margin-right:5px;margin-top:5px}
+
+
+
+
+.evolutionStep{
+  background:var(--soft);
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:12px;
+  font-weight:900;
+}
+
+
+</style>
+</head>
+<body>
+<main class="app">
+<div class="top"><div class="brand">m‑OS</div><button class="badge" id="modeBadge" onclick="openKernel()">Functional</button></div>
+<nav class="tabs"><button class="tab active" onclick="showTab('core',this)">Core</button><button class="tab" onclick="showTab('storage',this)">Speicher</button><button class="tab" onclick="showTab('calendar',this)">Kalender</button><button class="tab" onclick="showTab('daemons',this)">Daemonen</button><button class="tab" onclick="showTab('archive',this)">Ablage</button><button class="tab" onclick="showTab('system',this)">System</button></nav>
+<section id="core" class="view active"><div class="card"><div class="row"><div><h2>Kernel</h2><div class="sub">Füllt freie Plätze automatisch. Verschiebt Überlast nur nach Zustimmung.</div></div><button onclick="openKernel()">Systemmeldung</button></div><div class="modeRow"><button class="modeBtn" data-mode="safe" onclick="setMode('safe')">Safe</button><button class="modeBtn" data-mode="focus" onclick="setMode('focus')">Focus</button><button class="modeBtn" data-mode="functional" onclick="setMode('functional')">Functional</button></div></div><div class="card"><div class="sectionHead"><h2>▶ RAM</h2><span class="count" id="ramCount"></span></div><div id="ramList"></div></div><div class="card"><div class="sectionHead"><h2>⏳ Queue</h2><span class="count" id="queueCount"></span></div><div id="queueList"></div></div></section>
+<section id="storage" class="view"><div class="card"><div class="sectionHead"><h2>💾 Speicher</h2><span class="count" id="storageCount"></span></div><div id="storageList"></div></div></section>
+<section id="calendar" class="view"><div class="card"><div class="sectionHead"><h2>Kalender</h2><span class="count" id="calendarCount"></span></div><div id="calendarList"></div></div></section>
+<section id="daemons" class="view"><div class="card"><div class="sectionHead"><h2>Daemonen</h2></div><div id="daemonList"></div></div></section>
+<section id="archive" class="view">
+  <div class="card">
+    <div class="sectionHead"><h2>Ablage</h2><span class="count" id="archiveCount">0</span></div>
+    <div id="archiveHero" class="archiveHero"></div><div id="achievementBox"></div><div id="kernelWrapped" class="museumCard"></div>
+    <div class="statGrid">
+      <div class="statBox"><strong id="doneTotal">0</strong><div class="sub">erledigt</div></div>
+      <div class="statBox"><strong id="doneToday">0</strong><div class="sub">heute</div></div>
+      <div class="statBox"><strong id="topAnimal">—</strong><div class="sub">aktueller Titel</div></div>
+    </div>
+    <div class="card" style="padding:12px;margin-bottom:12px">
+      <h3>Kategorien</h3>
+      <div id="areaStats"></div>
+    </div>
+    <div class="card" style="padding:12px;margin-bottom:12px">
+      <h3>Modi</h3>
+      <div id="modeStats"></div>
+    </div>
+    <div class="tools">
+      <button onclick="clearArchive()">Ablage leeren</button>
+      <button class="secondary" onclick="exportData()">Export aktualisieren</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sectionHead"><h2>Erledigte Prozesse</h2></div>
+    <div id="archiveList"></div>
+  </div>
+</section>
+
+<section id="system" class="view"><div class="card"><div class="sectionHead"><h2>Kategorien</h2><span class="count" id="areaCount"></span></div><div class="sub" style="margin-bottom:12px">Priorität beeinflusst, was der Kernel aus Speicher/Queue nachrücken lässt. 1 = eher parken, 5 = schneller nach oben.</div><div class="row" style="margin-bottom:12px"><input id="newAreaName" placeholder="Neue Kategorie"><button onclick="addArea()">Hinzufügen</button></div><div id="areaManager"></div></div><div class="card"><h2>Datensicherung</h2><div class="tools"><button onclick="openData()">Export / Import</button></div></div></section>
+</main>
+<button class="fab" type="button" onclick="openAdd()">＋</button>
+<div class="overlay" id="taskOverlay"><div class="modal"><div class="modalHead"><div><h2 id="taskTitleModal">Task</h2><div class="sub" id="taskAreaModal"></div></div><button class="secondary" onclick="closeTask()">✕</button></div><div class="grid"><div class="box"><label>Dringlichkeit</label><div class="rangeRow"><input id="editUrgency" type="range" min="1" max="5" step="1" oninput="saveTaskSettings()"><span class="rangeValue" id="editUrgencyVal">3</span></div><div class="hint" id="hintUrgency"></div></div><div class="box"><label>Aufwand</label><div class="rangeRow"><input id="editEffort" type="range" min="1" max="5" step="1" oninput="saveTaskSettings()"><span class="rangeValue" id="editEffortVal">3</span></div><div class="hint" id="hintEffort"></div></div><div class="box"><label>Mentale Last</label><div class="rangeRow"><input id="editMental" type="range" min="1" max="5" step="1" oninput="saveTaskSettings()"><span class="rangeValue" id="editMentalVal">3</span></div><div class="hint" id="hintMental"></div></div></div><div class="grid"><div class="box"><label>Stichtag</label><input id="editDueDate" type="date" onchange="saveTaskSettings()"></div><div class="box"><label>Auto-RAM</label><select id="editAutoRamDays" onchange="saveTaskSettings()"><option value="">nie</option><option value="0">am Stichtag</option><option value="1">1 Tag vorher</option><option value="2">2 Tage vorher</option><option value="7">1 Woche vorher</option></select></div><div class="box"><label>Status</label><div class="sub" id="dueStatus" style="padding-top:9px"></div></div></div><details><summary>Hintergrundparameter anzeigen</summary><div class="grid"><div class="box"><label>Bereich</label><select id="editArea" onchange="saveTaskSettings()"></select><div class="hint" id="hintArea"></div></div><div class="box"><label>Mentalkontext</label><select id="editContext" onchange="saveTaskSettings()"></select><div class="hint" id="hintContext"></div></div><div class="box"><label>Energieprofil</label><select id="editEnergy" onchange="saveTaskSettings()"></select><div class="hint" id="hintEnergy"></div></div></div><div class="msg" id="scoreInfo"></div></details><div class="optionGrid"><button class="option" onclick="moveActive('ram')"><strong>▶ RAM</strong><br>Jetzt aktiv</button><button class="option" onclick="moveActive('queue')"><strong>⏳ Queue</strong><br>Als Nächstes</button><button class="option" onclick="moveActive('storage')"><strong>💾 Speicher</strong><br>Später</button><button class="option" onclick="completeActive()"><strong>✓ Erledigt</strong><br>Abschließen</button></div></div></div>
+<div class="overlay" id="addOverlay"><div class="modal"><div class="modalHead"><h2>Neue Task</h2><button class="secondary" onclick="closeAdd()">✕</button></div><input id="newTitle" placeholder="Titel"><select id="newArea" onchange="updateNewHints()"></select><div class="hint" id="hintNewArea"></div><select id="newTarget"><option value="queue">Queue</option><option value="ram">RAM</option><option value="storage">Speicher</option></select><div class="grid"><div class="box"><label>Dringlichkeit</label><div class="rangeRow"><input id="newUrgency" type="range" min="1" max="5" step="1" value="3" oninput="updateNewHints()"><span class="rangeValue" id="newUrgencyVal">3</span></div><div class="hint" id="hintNewUrgency"></div></div><div class="box"><label>Aufwand</label><div class="rangeRow"><input id="newEffort" type="range" min="1" max="5" step="1" value="3" oninput="updateNewHints()"><span class="rangeValue" id="newEffortVal">3</span></div><div class="hint" id="hintNewEffort"></div></div><div class="box"><label>Mentale Last</label><div class="rangeRow"><input id="newMental" type="range" min="1" max="5" step="1" value="3" oninput="updateNewHints()"><span class="rangeValue" id="newMentalVal">3</span></div><div class="hint" id="hintNewMental"></div></div></div><div class="grid"><div class="box"><label>Stichtag optional</label><input id="newDueDate" type="date"></div><div class="box"><label>Auto-RAM</label><select id="newAutoRamDays"><option value="">nie</option><option value="0">am Stichtag</option><option value="1">1 Tag vorher</option><option value="2">2 Tage vorher</option><option value="7">1 Woche vorher</option></select></div><div class="box"><label>Kontext</label><select id="newContext" onchange="updateNewHints()"></select><div class="hint" id="hintNewContext"></div></div></div><button onclick="addTask()">Hinzufügen</button></div></div>
+<div class="overlay" id="kernelOverlay"><div class="modal"><div class="modalHead"><div><h2>Kernel-Systemmeldung</h2><div class="sub">Nur auf Wunsch.</div></div><button class="secondary" onclick="closeKernel()">✕</button></div><div id="kernelMessages"></div><div id="suggestionList"></div><div class="optionGrid"><button onclick="applyAccepted()">Ausgewählte Vorschläge übernehmen</button><button class="secondary" onclick="closeKernel()">Schließen</button></div></div></div>
+<div class="overlay" id="dataOverlay"><div class="modal"><div class="modalHead"><h2>Export / Import</h2><button class="secondary" onclick="closeData()">✕</button></div><textarea id="dataBox" rows="10"></textarea><div class="tools"><button onclick="exportData()">Export anzeigen</button><button class="secondary" onclick="importData()">Import übernehmen</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const STORAGE_KEY='mos_core_reliable_add_v1';
+const g=id=>document.getElementById(id);
+let areas=['Kinder','Arbeit','SVHK','Admin','Kreativ','Haushalt einmalig','Selfcare'];
+const contexts=['Versorgung','Organisation','Pflicht','Beziehung','Kreativ','Regeneration','Zukunft','Wartung','Chaos'];
+const energies=['leicht','neutral','erschöpfend','aktivierend'];
+let mode='functional',activeTaskId=null,suggestions=[],suggestionState={},archive=[]; let areaPriorities={};
+const limits={safe:{ram:1,queue:1},focus:{ram:1,queue:3},functional:{ram:2,queue:5}};
+let tasks=[
+{id:1001,title:'Überweisung AWO',area:'Admin',context:'Pflicht',energy:'neutral',target:'queue',urgency:3,effort:1,mental:2,dueDate:'',autoRamDays:''},
+{id:1002,title:'Maila Uhr',area:'Kinder',context:'Versorgung',energy:'leicht',target:'queue',urgency:3,effort:1,mental:1,dueDate:'',autoRamDays:''},
+{id:1003,title:'Fahrrad reparieren',area:'Kinder',context:'Wartung',energy:'neutral',target:'queue',urgency:3,effort:2,mental:2,dueDate:'',autoRamDays:''},
+{id:1004,title:'Franzi Geschenk',area:'Admin',context:'Beziehung',energy:'leicht',target:'storage',urgency:2,effort:2,mental:1,dueDate:'',autoRamDays:''},
+{id:1005,title:'Steuer WISO',area:'Admin',context:'Pflicht',energy:'erschöpfend',target:'storage',urgency:4,effort:4,mental:4,dueDate:'',autoRamDays:''},
+{id:1006,title:'Oskar Psychologe',area:'Kinder',context:'Versorgung',energy:'erschöpfend',target:'ram',urgency:4,effort:2,mental:3,dueDate:'',autoRamDays:''},
+{id:1007,title:'Jonne Ergo',area:'Kinder',context:'Versorgung',energy:'neutral',target:'queue',urgency:4,effort:2,mental:2,dueDate:'',autoRamDays:''},
+{id:1008,title:'Katrin Geschenk',area:'Admin',context:'Beziehung',energy:'leicht',target:'storage',urgency:2,effort:2,mental:1,dueDate:'',autoRamDays:''},
+{id:1009,title:'Fenster reparieren',area:'Admin',context:'Wartung',energy:'neutral',target:'queue',urgency:3,effort:3,mental:2,dueDate:'',autoRamDays:''},
+{id:1010,title:'VC Beitrag prüfen',area:'SVHK',context:'Organisation',energy:'leicht',target:'storage',urgency:2,effort:1,mental:1,dueDate:'',autoRamDays:''},
+{id:1011,title:'Laufband reparieren',area:'Admin',context:'Wartung',energy:'neutral',target:'storage',urgency:2,effort:3,mental:2,dueDate:'',autoRamDays:''},
+{id:1012,title:'Barmer Bonus',area:'Admin',context:'Pflicht',energy:'neutral',target:'queue',urgency:2,effort:2,mental:2,dueDate:'',autoRamDays:''},
+{id:1013,title:'Fotos Cloud',area:'Kreativ',context:'Wartung',energy:'neutral',target:'storage',urgency:1,effort:3,mental:2,dueDate:'',autoRamDays:''},
+{id:1014,title:'Beach Cup Anmeldung',area:'SVHK',context:'Organisation',energy:'leicht',target:'ram',urgency:4,effort:1,mental:1,dueDate:'',autoRamDays:''},
+{id:1015,title:'Öl Wechsel Auto',area:'Admin',context:'Wartung',energy:'neutral',target:'queue',urgency:3,effort:2,mental:1,dueDate:'',autoRamDays:''},
+{id:1016,title:'Mitgliedsbeiträge',area:'SVHK',context:'Organisation',energy:'neutral',target:'queue',urgency:3,effort:2,mental:2,dueDate:'',autoRamDays:''},
+{id:1017,title:'WA Gruppen',area:'SVHK',context:'Organisation',energy:'erschöpfend',target:'queue',urgency:4,effort:3,mental:3,dueDate:'',autoRamDays:''},
+{id:1018,title:'Kündigung Prime',area:'Admin',context:'Pflicht',energy:'leicht',target:'storage',urgency:2,effort:1,mental:1,dueDate:'',autoRamDays:''},
+{id:1019,title:'Küche planen',area:'Admin',context:'Zukunft',energy:'erschöpfend',target:'storage',urgency:1,effort:5,mental:3,dueDate:'',autoRamDays:''},
+{id:1020,title:'Lohn 4/25 prüfen',area:'Arbeit',context:'Pflicht',energy:'erschöpfend',target:'queue',urgency:4,effort:3,mental:3,dueDate:'',autoRamDays:''},
+{id:1021,title:'Hr. L',area:'Arbeit',context:'Pflicht',energy:'erschöpfend',target:'storage',urgency:4,effort:3,mental:4,dueDate:'',autoRamDays:''},
+{id:1022,title:'Spieltisch',area:'Kreativ',context:'Kreativ',energy:'aktivierend',target:'storage',urgency:1,effort:4,mental:2,dueDate:'',autoRamDays:''},
+{id:1023,title:'Aufräumwürfel',area:'Kreativ',context:'Kreativ',energy:'aktivierend',target:'storage',urgency:1,effort:3,mental:2,dueDate:'',autoRamDays:''},
+{id:1024,title:'Rezeptbuch',area:'Kreativ',context:'Kreativ',energy:'aktivierend',target:'storage',urgency:1,effort:4,mental:2,dueDate:'',autoRamDays:''},
+{id:1025,title:'Familienvideo',area:'Kreativ',context:'Kreativ',energy:'aktivierend',target:'storage',urgency:1,effort:4,mental:3,dueDate:'',autoRamDays:''},
+{id:1026,title:'mOS Buch',area:'Kreativ',context:'Zukunft',energy:'aktivierend',target:'storage',urgency:2,effort:5,mental:3,dueDate:'',autoRamDays:''},
+{id:1027,title:'Arzttermin Arm',area:'Admin',context:'Versorgung',energy:'neutral',target:'queue',urgency:4,effort:1,mental:2,dueDate:'',autoRamDays:''},
+{id:1028,title:'Arzttermin Hautarzt',area:'Admin',context:'Versorgung',energy:'neutral',target:'queue',urgency:3,effort:1,mental:2,dueDate:'',autoRamDays:''},
+{id:1029,title:'Arzttermin Hautarzt Oskar',area:'Kinder',context:'Versorgung',energy:'neutral',target:'queue',urgency:4,effort:1,mental:2,dueDate:'',autoRamDays:''},
+{id:3001,title:'Badeschrank',area:'Haushalt einmalig',context:'Wartung',energy:'neutral',target:'storage',urgency:1,effort:3,mental:2,dueDate:'',autoRamDays:''},
+{id:3002,title:'Schuhschrank',area:'Haushalt einmalig',context:'Wartung',energy:'neutral',target:'storage',urgency:1,effort:3,mental:2,dueDate:'',autoRamDays:''},
+{id:3003,title:'Weißes Couchregal',area:'Haushalt einmalig',context:'Wartung',energy:'neutral',target:'storage',urgency:1,effort:3,mental:2,dueDate:'',autoRamDays:''},
+{id:3004,title:'Spielregal',area:'Haushalt einmalig',context:'Wartung',energy:'neutral',target:'storage',urgency:1,effort:3,mental:2,dueDate:'',autoRamDays:''}
+];
+let daemons=['Kinderzimmer 1','Kinderzimmer 2','Kinderzimmer 3','Schlafzimmer','Wohnzimmer','Küche','Flur','Bad','Fenster putzen','Wand überweißen','Balkon','Staub wischen','Waschmaschine reinigen','Dusche entkalken','Matratze waschen','Couchbezüge waschen','Bettzeug waschen','Teppiche waschen','Innenflächen','Oberflächen','Ofen reinigen','Kühlschrank','Volleyball Workout'];
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,tasks,daemons,mode,areas,archive,areaPriorities}))}
+function load(){try{const d=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');if(Array.isArray(d.tasks))tasks=d.tasks;if(Array.isArray(d.daemons))daemons=d.daemons;if(Array.isArray(d.areas))areas=d.areas;if(Array.isArray(d.archive))archive=d.archive;if(d.areaPriorities)areaPriorities=d.areaPriorities;if(d.mode)mode=d.mode}catch(e){}}
+function fill(id,list){const el=g(id);if(el)el.innerHTML=list.map(v=>`<option value="${escAttr(v)}">${esc(v)}</option>`).join('')}
+function setupSelects(){
+  areas.forEach(a=>{ if(areaPriorities[a]===undefined) areaPriorities[a]=3; });
+  Object.keys(areaPriorities).forEach(a=>{ if(!areas.includes(a)) delete areaPriorities[a]; });
+  fill('newArea',areas);fill('editArea',areas);fill('newContext',contexts);fill('editContext',contexts);fill('editEnergy',energies)
+}
+function h(map,v,fb=''){return map[String(v)]||fb}
+function urgencyHint(v){return h({'1':'Kann liegen. Selbst der Kernel gähnt noch.','2':'Leicht erhöhte Existenzlautstärke.','3':'Standardstufe. Der Kernel läuft mit Kaffeebecher herum.','4':'Sollte bald passieren. Die Queue steht bereits unangenehm dicht hinter dir.','5':'Absolute Priorität. Wenn das länger liegt, entwickelt es Beine.'},v)}
+function effortHint(v){return h({'1':'So klein, dass es fast beleidigt ist, Task genannt zu werden.','2':'Kleiner Prozess. Könnte zwischen zwei Gedanken passieren.','3':'Mittlere Baustelle. Der mentale Werkzeugkasten klappt hörbar auf.','4':'Größerer Brocken. Das ist kein „mach ich kurz“.','5':'Mammutprozess. Der Kalender beginnt leise zu weinen.'},v)}
+function mentalHint(v){return h({'1':'Mentale Feder. Könnte theoretisch sogar vor Kaffee passieren.','2':'Leichtes Hintergrundrauschen. Gehirn summt auf Zimmerlautstärke.','3':'Spürbar. Der innere Prozessor hebt eine Augenbraue.','4':'Mentale Last erhöht. Der Schädel startet Umluft.','5':'Mentales Klavier auf den Schultern. Bitte nicht zusätzlich jonglieren.'},v)}
+function areaHint(v){return h({'Kinder':'Versorgungsbereich erkannt. Kleine Schuhe, große Systemrelevanz.','Arbeit':'Arbeitsprozess erkannt. Outlook knistert bereits in der Ferne.','SVHK':'SVHK-Prozess erkannt. Ehrenamt frisst manchmal RAM wie ein Browser-Tab.','Admin':'Adminprozess erkannt. Irgendwo entsteht gerade automatisch ein Formular.','Kreativ':'Kreativprozess erkannt. Gefahr spontaner Nebenquests erhöht.','Haushalt einmalig':'Haushaltsprozess erkannt. Der Staub versucht unauffällig zu verschwinden.','Selfcare':'Selfcare erkannt. Der Kernel legt vorsichtig eine Wärmflasche bereit.'},v,'Neue Kategorie erkannt. Der Kernel tut so, als wäre das geplant.')}
+function contextHint(v){return h({'Versorgung':'Versorgungskontext. Niemand applaudiert, aber alles bricht ohne ihn zusammen.','Organisation':'Organisationskontext. Sehr viele kleine Dinge tun plötzlich so, als wären sie dringend.','Pflicht':'Pflichtprozess. Niemand wollte ihn, aber da steht er nun.','Beziehung':'Beziehungsprozess. Emotionale WLAN-Verbindung schwankt leicht.','Kreativ':'Kreativkontext. Könnte Genialität sein oder Bastelkiste eskalieren lassen.','Regeneration':'Regeneration aktiv. Bitte nicht während des Updates ausschalten.','Zukunft':'Zukunftsprozess. Noch friedlich, aber beobachtet dich bereits.','Wartung':'Wartungskontext. Die Erwachsenen-Version von Gemüse essen.','Chaos':'Chaoskontext erkannt. Der Kernel hält sich an Möbeln fest.'},v)}
+function energyHint(v){return h({'leicht':'Leicht. Könnte nebenbei laufen, bis plötzlich doch 17 davon existieren.','neutral':'Neutral. Kein Drama, nur klassische Erwachsenenenergie.','erschöpfend':'Erschöpfend. Der mentale Lüfter klingt jetzt wie ein alter Laptop.','aktivierend':'Aktivierend. 50 % Energiegewinn, 50 % neue Obsession.'},v)}
+function setText(id,txt){const el=g(id);if(el)el.textContent=txt}
+function updateNewHints(){setText('newUrgencyVal',g('newUrgency').value);setText('newEffortVal',g('newEffort').value);setText('newMentalVal',g('newMental').value);setText('hintNewUrgency',urgencyHint(g('newUrgency').value));setText('hintNewEffort',effortHint(g('newEffort').value));setText('hintNewMental',mentalHint(g('newMental').value));setText('hintNewArea',areaHint(g('newArea').value));setText('hintNewContext',contextHint(g('newContext').value))}
+function updateEditHints(){setText('editUrgencyVal',g('editUrgency').value);setText('editEffortVal',g('editEffort').value);setText('editMentalVal',g('editMental').value);setText('hintUrgency',urgencyHint(g('editUrgency').value));setText('hintEffort',effortHint(g('editEffort').value));setText('hintMental',mentalHint(g('editMental').value));setText('hintArea',areaHint(g('editArea').value));setText('hintContext',contextHint(g('editContext').value));setText('hintEnergy',energyHint(g('editEnergy').value))}
+function todayISO(){return new Date().toISOString().slice(0,10)}function daysUntil(d){if(!d)return 9999;return Math.round((new Date(d)-new Date(todayISO()))/86400000)}function dueText(t){if(!t.dueDate)return'';const d=daysUntil(t.dueDate);return d<0?`überfällig seit ${Math.abs(d)} Tag(en)`:d===0?'heute fällig':d===1?'morgen fällig':`fällig in ${d} Tagen`}
+function calendarSweep(){const today=todayISO();tasks.forEach(t=>{if(!t.dueDate||t.autoRamDays===''||t.autoRamDays==null)return;const trig=new Date(t.dueDate);trig.setDate(trig.getDate()-Number(t.autoRamDays));if(today>=trig.toISOString().slice(0,10)&&t.target!=='ram')t.target='ram'})}
+function score(t){return (Number(areaPriorities[t.area]||3)-3)*2 + (t.context==='Versorgung'?3:t.context==='Pflicht'?2:t.context==='Organisation'?1:t.context==='Regeneration'?1:t.context==='Kreativ'?-1:0)+Number(t.urgency||3)*3-Number(t.effort||3)*1.4-Number(t.mental||3)*1.7-(t.energy==='erschöpfend'?2:t.energy==='aktivierend'?-1:0)}
+function scoreText(t){return`Score ${score(t).toFixed(1)} · Kategorie-Priorität: ${areaPriorities[t.area]||3} · Kontext: ${t.context||'Organisation'} · Energie: ${t.energy||'neutral'}`}
+function iconFor(t){return t==='ram'?'▶':t==='queue'?'⏳':'💾'}function labelFor(t){return t==='ram'?'RAM':t==='queue'?'Queue':'Speicher'}
+function showTab(id,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));g(id).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active')}
+function setMode(m){mode=m;render();save()}
+function move(id,target){const t=tasks.find(x=>x.id===id);if(!t)return;t.target=target;t.manual=true;render();save()}
+function animalForCount(n){
+  if(n>=100)return ['🐉','Drachenwesen der Erledigung'];
+  if(n>=50)return ['🦉','Listen-Uhu mit Abschlusskompetenz'];
+  if(n>=25)return ['🦊','Fokus-Fuchs'];
+  if(n>=10)return ['🐿️','Abarbeitungs-Eichhörnchen'];
+  if(n>=5)return ['🦝','Produktivitäts-Waschbär'];
+  if(n>=1)return ['🦔','Task-Igel'];
+  return ['🫧','Noch unklassifiziertes Prozesswesen'];
+}
+function completionLine(item,total){
+  const lines=[
+    `Du bist heute ein ${animalForCount(total)[1]}. Kleine Krone, große Wirkung.`,
+    `Prozess beendet. Der Kernel nickt anerkennend und tut so, als wäre er nicht gerührt.`,
+    `Task erledigt. Die Queue hat kurz leiser geatmet.`,
+    `Abschluss registriert. Ein Hintergrundprozess wirft Konfetti in sehr kleiner Schrift.`,
+    `Erledigt. Das innere Betriebssystem macht einen winzigen Siegeston.`
+  ];
+  return lines[Math.floor(Math.random()*lines.length)];
+}
+function quickComplete(id){
+  const t=tasks.find(x=>x.id===id);
+  if(!t)return;
+  tasks=tasks.filter(x=>x.id!==id);
+  const item={...t,completedAt:new Date().toISOString(),completedMode:mode,animal:animalForCount((archive.length||0)+1)[1]};
+  item.line=completionLine(item,(archive.length||0)+1);
+  archive.unshift(item);
+  toast(item.line);
+  render();
+  save();
+}
+function destinations(t){return['ram','queue','storage'].filter(x=>x!==t.target).map(x=>`<button type="button" class="iconBtn" title="${labelFor(x)}" onclick="event.stopPropagation();move(${t.id},'${x}')">${iconFor(x)}</button>`).join('')}
+function taskHTML(t){return`<article class="task ${t.target}" onclick="openTask(${t.id})"><div class="taskRow"><div><h4>${esc(t.title)}</h4><div class="sub">${esc(t.area)}</div>${t.dueDate?`<div class="dueBadge">${esc(dueText(t))}</div>`:''}</div><div class="taskBtns" onclick="event.stopPropagation()">${destinations(t)}<button type="button" class="doneBtn" onclick="quickComplete(${t.id})">✓</button></div></div></article>`}
+
+function daemonToTask(name,target){
+  return {
+    id: Date.now() + Math.floor(Math.random()*100000),
+    title: name,
+    area: name.toLowerCase().includes('volleyball') ? 'Selfcare' : 'Haushalt einmalig',
+    context: name.toLowerCase().includes('volleyball') ? 'Regeneration' : 'Wartung',
+    energy: name.toLowerCase().includes('volleyball') ? 'aktivierend' : 'neutral',
+    target,
+    urgency: 2,
+    effort: 2,
+    mental: 1,
+    dueDate: '',
+    autoRamDays: '',
+    daemonSource: true
+  };
+}
+
+function isDaemonAlreadyActive(name){
+  return tasks.some(t => t.daemonSource && t.title === name && (t.target === 'ram' || t.target === 'queue'));
+}
+
+function autoFillUnderloaded(){
+  const ramLimit = limits[mode].ram;
+  const queueLimit = limits[mode].queue;
+
+  let ram = tasks.filter(t => t.target === 'ram');
+  let queue = tasks.filter(t => t.target === 'queue');
+  let storage = tasks.filter(t => t.target === 'storage');
+
+  while(ram.length < ramLimit && queue.length > 0){
+    const candidate = [...queue].sort((a,b)=>score(b)-score(a))[0];
+    if(!candidate) break;
+    candidate.target = 'ram';
+    ram = tasks.filter(t => t.target === 'ram');
+    queue = tasks.filter(t => t.target === 'queue');
+  }
+
+  while(queue.length < queueLimit && storage.length > 0){
+    const candidate = [...storage].sort((a,b)=>score(b)-score(a))[0];
+    if(!candidate) break;
+    candidate.target = 'queue';
+    queue = tasks.filter(t => t.target === 'queue');
+    storage = tasks.filter(t => t.target === 'storage');
+  }
+
+  ram = tasks.filter(t => t.target === 'ram');
+  queue = tasks.filter(t => t.target === 'queue');
+
+  while(ram.length < ramLimit){
+    const daemon = daemons.find(d => !isDaemonAlreadyActive(d));
+    if(!daemon) break;
+    tasks.unshift(daemonToTask(daemon,'ram'));
+    ram = tasks.filter(t => t.target === 'ram');
+  }
+
+  while(queue.length < queueLimit){
+    const daemon = daemons.find(d => !isDaemonAlreadyActive(d));
+    if(!daemon) break;
+    tasks.push(daemonToTask(daemon,'queue'));
+    queue = tasks.filter(t => t.target === 'queue');
+  }
+}
+
+
+function sameDay(a,b){
+  return new Date(a).toDateString()===new Date(b).toDateString();
+}
+function countBy(list,keyFn){
+  return list.reduce((acc,item)=>{
+    const key=keyFn(item)||'Unsortiert';
+    acc[key]=(acc[key]||0)+1;
+    return acc;
+  },{});
+}
+function barsHTML(counts){
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max=Math.max(1,...entries.map(e=>e[1]));
+  return entries.length?entries.map(([k,v])=>`<div class="barRow"><div class="sub">${esc(k)}</div><div class="barTrack"><div class="barFill" style="width:${Math.round(v/max*100)}%"></div></div><div class="sub">${v}</div></div>`).join(''):'<div class="empty">Noch keine Daten.</div>';
+}
+
+function archiveHTML(item){
+  const date=new Date(item.completedAt).toLocaleDateString('de-DE');
+
+  const logs=[
+    'PROZESS ERFOLGREICH GESCHLOSSEN',
+    'QUEUE-KONSISTENZ LEICHT ERHÖHT',
+    'REALITÄT KURZZEITIG VERWALTBAR',
+    'HINTERGRUNDRAUSCHEN REDUZIERT',
+    'KERNEL REGISTRIERT STRUKTUR'
+  ];
+
+  const log=logs[item.id % logs.length];
+
+  return `<article class="archiveItem">
+    <div class="sub">[ ARCHIVIERT ${date} ]</div>
+    <h4 style="margin-top:6px">${esc(item.title)}</h4>
+    <div class="sub">${esc(item.area)} · ${esc(item.completedMode||'unknown')}</div>
+    <div class="dueBadge" style="margin-top:10px">${log}</div>
+  </article>`;
+}
+
+function renderArchive(){
+  if(!g('archiveList'))return;
+
+  const total=archive.length;
+  const today=archive.filter(i=>sameDay(i.completedAt,new Date())).length;
+  const animal=animalForCount(total);
+
+  g('archiveCount').textContent=total;
+  g('doneTotal').textContent=total;
+  g('doneToday').textContent=today;
+  g('topAnimal').textContent=animal[0];
+
+  g('archiveHero').innerHTML=`
+    <div class="sub">ARCHIVMODUL AKTIV</div>
+    <h3 style="margin-top:8px;font-size:28px;letter-spacing:-0.04em">
+      ${total} ABGESCHLOSSENE PROZESSE
+    </h3>
+    <div class="sub" style="margin-top:8px">
+      ${total
+        ? 'Der Kernel registriert weiterhin erstaunliche Mengen an Realitätsverarbeitung.'
+        : 'Noch keine archivierten Prozesse.'}
+    </div>`;
+
+  
+  const achievements=achievementList();
+
+  g('achievementBox').innerHTML = achievements.length
+    ? achievements.map(a=>`
+      <div class="achievement">
+        <strong>${a[0]}</strong>
+        <div class="sub">${a[1]}</div>
+      </div>
+    `).join('')
+    : `
+      <div class="achievement">
+        <strong>KERNELSTATUS</strong>
+        <div class="sub">KEINE BESONDEREN ANOMALIEN</div>
+      </div>
+    `;
+
+  g('kernelWrapped').innerHTML = `
+    <h3 style="margin-bottom:10px">Kernel Jahresrückblick</h3>
+    ${wrappedText()}
+  `;
+
+  g('areaStats').innerHTML=barsHTML(countBy(archive,i=>i.area));
+  g('modeStats').innerHTML=barsHTML(countBy(archive,i=>i.completedMode));
+  g('archiveList').innerHTML=archive.map(archiveHTML).join('')||'<div class="empty">Noch keine erledigten Tasks in der Ablage.</div>';
+}
+function clearArchive(){
+  if(!confirm('Ablage wirklich leeren? Der Trophäenkeller wird dann einmal durchgewischt.'))return;
+  archive=[];
+  render();
+  save();
+  toast('Ablage geleert. Der Trophäenkeller riecht nach Neustart.');
+}
+
+function render(){calendarSweep();autoFillUnderloaded();const ram=tasks.filter(t=>t.target==='ram'),queue=tasks.filter(t=>t.target==='queue'),storage=tasks.filter(t=>t.target==='storage'),cal=tasks.filter(t=>t.dueDate).sort((a,b)=>daysUntil(a.dueDate)-daysUntil(b.dueDate));g('ramList').innerHTML=ram.map(taskHTML).join('')||'<div class="empty">RAM leer.</div>';g('queueList').innerHTML=queue.map(taskHTML).join('')||'<div class="empty">Queue leer.</div>';g('storageList').innerHTML=storage.map(taskHTML).join('')||'<div class="empty">Speicher leer.</div>';g('calendarList').innerHTML=cal.map(taskHTML).join('')||'<div class="empty">Keine Tasks mit Stichtag.</div>';g('daemonList').innerHTML=daemons.map(d=>`<article class="task daemon"><h4>${esc(d)}</h4></article>`).join('');g('ramCount').textContent=`${ram.length}/${limits[mode].ram}`;g('queueCount').textContent=`${queue.length}/${limits[mode].queue}`;g('storageCount').textContent=storage.length;g('calendarCount').textContent=cal.length;g('modeBadge').textContent=mode.charAt(0).toUpperCase()+mode.slice(1);document.querySelectorAll('.modeBtn').forEach(btn=>btn.classList.toggle('active',btn.dataset.mode===mode));renderAreaManager();renderArchive()}
+function openTask(id){const t=tasks.find(x=>x.id===id);if(!t)return;activeTaskId=id;g('taskTitleModal').textContent=t.title;g('taskAreaModal').textContent=t.area;g('editUrgency').value=t.urgency||3;g('editEffort').value=t.effort||3;g('editMental').value=t.mental||3;g('editDueDate').value=t.dueDate||'';g('editAutoRamDays').value=(t.autoRamDays!=null)?String(t.autoRamDays):'';g('editArea').value=t.area||areas[0];g('editContext').value=t.context||'Organisation';g('editEnergy').value=t.energy||'neutral';g('dueStatus').textContent=dueText(t)||'kein Stichtag';g('scoreInfo').textContent=scoreText(t);updateEditHints();g('taskOverlay').classList.add('show')}
+function closeTask(){g('taskOverlay').classList.remove('show');activeTaskId=null}
+function saveTaskSettings(){const t=tasks.find(x=>x.id===activeTaskId);if(!t)return;t.urgency=Number(g('editUrgency').value);t.effort=Number(g('editEffort').value);t.mental=Number(g('editMental').value);t.dueDate=g('editDueDate').value||'';t.autoRamDays=g('editAutoRamDays').value;t.area=g('editArea').value;t.context=g('editContext').value;t.energy=g('editEnergy').value;g('taskAreaModal').textContent=t.area;g('dueStatus').textContent=dueText(t)||'kein Stichtag';g('scoreInfo').textContent=scoreText(t);updateEditHints();render();save()}
+function moveActive(target){if(activeTaskId!==null)move(activeTaskId,target);closeTask()}function completeActive(){if(activeTaskId!==null)quickComplete(activeTaskId);closeTask()}
+function openAdd(){setupSelects();updateNewHints();g('addOverlay').classList.add('show')}function closeAdd(){g('addOverlay').classList.remove('show')}
+function addTask(){const title=g('newTitle').value.trim();if(!title){toast('Task braucht einen Namen. Sonst ist es nur Nebel mit Absicht.');return}tasks.unshift({id:Date.now(),title,area:g('newArea').value,context:g('newContext').value,energy:'neutral',target:g('newTarget').value,urgency:Number(g('newUrgency').value),effort:Number(g('newEffort').value),mental:Number(g('newMental').value),dueDate:g('newDueDate').value||'',autoRamDays:g('newAutoRamDays').value,manual:true});g('newTitle').value='';g('newDueDate').value='';g('newAutoRamDays').value='';closeAdd();render();save();toast('Neue Task registriert. Der Kernel tut beschäftigt.')}
+function kernelMessagesList(){const ram=tasks.filter(t=>t.target==='ram'),queue=tasks.filter(t=>t.target==='queue'),msgs=[];if(ram.length>limits[mode].ram)msgs.push('RAM über Modus-Grenze. Der Kernel schlägt Entlastung vor, schubst aber nichts heimlich raus.');if(queue.length>limits[mode].queue)msgs.push('Queue überfüllt. Das Wartezimmer stapelt Stühle, aber der Kernel verschiebt nur mit Zustimmung.');if(ram.filter(t=>t.energy==='erschöpfend').length>1)msgs.push('Mehr als ein erschöpfender Prozess im RAM. Der innere Lüfter macht Geräusche.');if(!ram.some(t=>t.context==='Regeneration'))msgs.push('Keine regenerative Task aktiv. Der Kernel sagt nichts, notiert aber sehr laut.');if(queue.length===0&&tasks.some(t=>t.target==='storage'))msgs.push('Queue leer. Im Speicher rascheln eingefrorene Prozesse mit den Folien.');return msgs}
+function buildSuggestions(){const rL=limits[mode].ram,qL=limits[mode].queue,ram=tasks.filter(t=>t.target==='ram'),queue=tasks.filter(t=>t.target==='queue'),storage=tasks.filter(t=>t.target==='storage'),out=[];if(ram.length>rL)[...ram].sort((a,b)=>score(a)-score(b)).slice(0,ram.length-rL).forEach(t=>out.push({id:t.id,from:'ram',to:'queue',reason:'RAM ist über Limit. Diese Aufgabe kann warten.'}));if(queue.length>qL)[...queue].sort((a,b)=>score(a)-score(b)).slice(0,queue.length-qL).forEach(t=>out.push({id:t.id,from:'queue',to:'storage',reason:'Queue ist über Limit. Diese Aufgabe kann später warten.'}));if(ram.length<rL&&queue.length)[...queue].sort((a,b)=>score(b)-score(a)).slice(0,rL-ram.length).forEach(t=>out.push({id:t.id,from:'queue',to:'ram',reason:'RAM hat Platz. Diese Aufgabe passt am besten.'}));if(queue.length<qL&&storage.length)[...storage].sort((a,b)=>score(b)-score(a)).slice(0,qL-queue.length).forEach(t=>out.push({id:t.id,from:'storage',to:'queue',reason:'Queue hat Platz. Aus dem Speicher auftauen.'}));return out}
+function openKernel(){const msgs=kernelMessagesList();g('kernelMessages').innerHTML=msgs.length?msgs.map(m=>`<div class="msg">${esc(m)}</div>`).join(''):'<div class="msg">Keine besondere Systemmeldung. Der Kernel poliert einen imaginären Knopf.</div>';suggestions=buildSuggestions();suggestionState={};suggestions.forEach(s=>suggestionState[s.id]='pending');renderSuggestions();g('kernelOverlay').classList.add('show')}
+function renderSuggestions(){g('suggestionList').innerHTML=suggestions.length?suggestions.map(s=>{const t=tasks.find(x=>x.id===s.id),state=suggestionState[s.id]||'pending';return`<div class="suggestion ${state}"><h4>${esc(t?t.title:'Task')}</h4><div class="sub">${labelFor(s.from)} → ${labelFor(s.to)} · ${state==='accepted'?'angenommen':state==='ignored'?'ignoriert':'offen'}</div><div class="sub">${esc(s.reason)}</div><div class="suggestionActions"><button onclick="acceptOne(${s.id})">Annehmen</button><button class="secondary" onclick="ignoreOne(${s.id})">Ignorieren</button></div></div>`}).join(''):'<div class="empty">Keine Kernel-Verschiebung nötig.</div>'}
+function acceptOne(id){suggestionState[id]='accepted';renderSuggestions()}function ignoreOne(id){suggestionState[id]='ignored';renderSuggestions()}function applyAccepted(){suggestions.filter(s=>suggestionState[s.id]==='accepted').forEach(s=>{const t=tasks.find(x=>x.id===s.id);if(t)t.target=s.to});closeKernel();render();save()}function closeKernel(){g('kernelOverlay').classList.remove('show')}
+function addArea(){const name=g('newAreaName').value.trim();if(!name){toast('Kategorie braucht einen Namen. Nebel ist kein Ordner.');return}if(areas.some(a=>a.toLowerCase()===name.toLowerCase())){toast('Kategorie gibt es schon. Doppelgänger abgewiesen.');return}areas.push(name);areaPriorities[name]=3;g('newAreaName').value='';setupSelects();render();save();toast('Kategorie hinzugefügt. Der Karteikasten knackt zufrieden.')}
+function renameArea(oldName,newName){newName=String(newName||'').trim();if(!newName)return;areas=areas.map(a=>a===oldName?newName:a);areaPriorities[newName]=areaPriorities[oldName]||3;delete areaPriorities[oldName];tasks.forEach(t=>{if(t.area===oldName)t.area=newName});setupSelects();render();save();toast('Kategorie umbenannt. Bürokratie mit Hutwechsel.')}
+function deleteArea(name){if(tasks.some(t=>t.area===name)&&!confirm('Kategorie wird noch genutzt. Trotzdem löschen?'))return;areas=areas.filter(a=>a!==name);delete areaPriorities[name];if(!areas.length){areas=['Allgemein'];areaPriorities['Allgemein']=3;}setupSelects();render();save();toast('Kategorie gelöscht. Der Kernel fegt diskret die Krümel weg.')}
+function areaPriorityHint(v){
+  return {
+    '1':'Niedrig. Darf im Speicher meditieren.',
+    '2':'Eher niedrig. Wichtig, aber ohne Fanfare.',
+    '3':'Normalgewicht. Standard-Kernelkost.',
+    '4':'Wichtig. Der Kernel legt es weiter nach oben.',
+    '5':'Sehr wichtig. Diese Kategorie trägt Warnweste und Megafon.'
+  }[String(v)] || 'Normalgewicht.';
+}
+function setAreaPriority(area,value){
+  areaPriorities[area]=Number(value);
+  const val=g('prioVal_'+safeId(area));
+  const hint=g('prioHint_'+safeId(area));
+  if(val)val.textContent=value;
+  if(hint)hint.textContent=areaPriorityHint(value);
+  save();
+}
+function safeId(str){return String(str).replace(/[^a-zA-Z0-9_-]/g,'_')}
+function renderAreaManager(){
+  const el=g('areaManager');if(!el)return;
+  areas.forEach(a=>{ if(areaPriorities[a]===undefined) areaPriorities[a]=3; });
+  g('areaCount').textContent=areas.length;
+  el.innerHTML=areas.map(a=>{
+    const pr=areaPriorities[a]||3;
+    const sid=safeId(a);
+    return `<div class="areaItem areaPriority">
+      <input value="${escAttr(a)}" onchange="renameArea('${jsAttr(a)}',this.value)">
+      <div>
+        <div class="rangeRow">
+          <input type="range" min="1" max="5" step="1" value="${pr}" oninput="setAreaPriority('${jsAttr(a)}',this.value)">
+          <span class="rangeValue" id="prioVal_${sid}">${pr}</span>
+        </div>
+        <div class="hint" id="prioHint_${sid}">${areaPriorityHint(pr)}</div>
+      </div>
+      <div class="areaBtns"><button class="secondary" onclick="deleteArea('${jsAttr(a)}')">löschen</button></div>
+    </div>`;
+  }).join('');
+}
+function openData(){g('dataOverlay').classList.add('show')}function closeData(){g('dataOverlay').classList.remove('show')}function exportData(){g('dataBox').value=JSON.stringify({version:1,tasks,daemons,mode,areas,archive,areaPriorities},null,2);toast('Export bereit. Kopieren nicht vergessen.')}function importData(){try{const d=JSON.parse(g('dataBox').value);if(!Array.isArray(d.tasks))throw Error();tasks=d.tasks;daemons=Array.isArray(d.daemons)?d.daemons:daemons;areas=Array.isArray(d.areas)?d.areas:areas;archive=Array.isArray(d.archive)?d.archive:archive;areaPriorities=d.areaPriorities||areaPriorities;mode=d.mode||mode;setupSelects();save();render();closeData();toast('Import übernommen. Gedächtnis wieder montiert.')}catch(e){toast('Import konnte nicht gelesen werden. JSON hat Schluckauf.')}}
+function esc(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function escAttr(str){return esc(str)}function jsAttr(str){return String(str).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}function toast(msg){const t=g('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
+['taskOverlay','addOverlay','kernelOverlay','dataOverlay'].forEach(id=>g(id).onclick=e=>{if(e.target===g(id)){if(id==='taskOverlay')closeTask();if(id==='addOverlay')closeAdd();if(id==='kernelOverlay')closeKernel();if(id==='dataOverlay')closeData();}});
+load();setupSelects();render();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(console.error);
+  });
+}
+</script>
+</body></html>
